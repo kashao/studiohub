@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}數據圖表 | StudioHub{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-12 col-lg-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h1 class="h4 mb-3">數據概覽</h1>
+        <p class="text-muted">使用 Highcharts 呈現即時專案指標，搭配 Bootstrap 排版。</p>
+        <div class="list-group">
+          <div class="list-group-item d-flex justify-content-between">
+            本週任務完成率
+            <strong id="taskRate">82%</strong>
+          </div>
+          <div class="list-group-item d-flex justify-content-between">
+            活躍專案
+            <strong>6</strong>
+          </div>
+          <div class="list-group-item d-flex justify-content-between">
+            最新更新
+            <strong>5 分鐘前</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h5">效率趨勢</h2>
+        <div id="efficiencyChart" style="height: 320px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    Highcharts.chart('efficiencyChart', {
+      title: { text: '團隊效率趨勢' },
+      xAxis: { categories: ['週一', '週二', '週三', '週四', '週五', '週六', '週日'] },
+      yAxis: { title: { text: '完成度 (%)' } },
+      series: [
+        { name: '任務完成率', data: [70, 68, 75, 80, 85, 78, 82] },
+        { name: '回饋分數', data: [60, 62, 65, 72, 74, 76, 79] }
+      ],
+      credits: { enabled: false }
+    });
+  });
+</script>
+{% endblock %}

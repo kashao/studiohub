@@ -1,0 +1,1 @@
+"""Charts app for studiohub."""

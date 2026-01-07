@@ -1,0 +1,1 @@
+"""Studiohub application package."""

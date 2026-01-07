@@ -1,0 +1,39 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+
+# --- Django secrets / env ---
+.env
+.env.*
+
+# --- Local DB (SQLite) ---
+db.sqlite3
+*.sqlite3
+
+# --- User uploads / generated files ---
+media/
+!media/.gitkeep
+staticfiles/
+
+
+# --- Logs ---
+*.log
+
+# --- Ignore Django migrations (one-off project) ---
+**/migrations/*.py
+!**/migrations/__init__.py
+**/migrations/*.pyc
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+
+# --- IDE / Editor ---
+.idea/
+.vscode/
+
+# --- OS (Windows/macOS) ---
+.DS_Store
+Thumbs.db

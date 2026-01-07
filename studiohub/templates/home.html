@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}StudioHub 首頁{% endblock %}
+
+{% block content %}
+  <div class="p-4 p-md-5 mb-4 rounded bg-white shadow-sm">
+    <h1 class="display-6 fw-bold">StudioHub</h1>
+    <p class="lead">快速進入各個功能區：</p>
+    <div class="d-flex flex-wrap gap-2">
+      <a class="btn btn-primary" href="/files/">檔案</a>
+      <a class="btn btn-success" href="/charts/">圖表</a>
+      <a class="btn btn-dark" href="/chat/">聊天</a>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}即時聊天 | StudioHub{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-12 col-lg-5">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h1 class="h4 mb-3">聊天室清單</h1>
+        <div class="list-group" id="chatList">
+          <button class="list-group-item list-group-item-action active">產品團隊</button>
+          <button class="list-group-item list-group-item-action">設計審查</button>
+          <button class="list-group-item list-group-item-action">客戶支援</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-7">
+    <div class="card shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h2 class="h5">最新對話</h2>
+        <div id="chatBox" class="border rounded bg-white p-3 mb-3 flex-grow-1" style="min-height: 200px;">
+          <p class="text-muted">請選擇聊天室，開始對話。</p>
+        </div>
+        <div class="input-group">
+          <input id="chatInput" type="text" class="form-control" placeholder="輸入訊息">
+          <button id="chatSend" class="btn btn-primary">送出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const chatList = document.getElementById('chatList');
+  const chatBox = document.getElementById('chatBox');
+  const chatInput = document.getElementById('chatInput');
+  const chatSend = document.getElementById('chatSend');
+
+  const getCookie = (name) => {
+    const cookies = document.cookie ? document.cookie.split('; ') : [];
+    for (const cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName === name) {
+        return decodeURIComponent(cookieValue);
+      }
+    }
+    return '';
+  };
+
+  const appendBubble = (text, className) => {
+    const bubble = document.createElement('div');
+    bubble.className = className;
+    bubble.textContent = text;
+    chatBox.appendChild(bubble);
+  };
+
+  chatList.addEventListener('click', (event) => {
+    if (event.target.matches('button')) {
+      chatList.querySelectorAll('button').forEach((btn) => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      chatBox.innerHTML = '';
+      appendBubble(`${event.target.textContent} 已啟動。`, 'alert alert-secondary py-2 px-3');
+    }
+  });
+
+  const sendMessage = () => {
+    const message = chatInput.value.trim();
+    if (!message) return;
+    appendBubble(message, 'alert alert-primary py-2 px-3');
+    chatInput.value = '';
+
+    fetch('{% url "chat-message" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: new URLSearchParams({ usertext: message }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        appendBubble(data.result || '', 'alert alert-light py-2 px-3');
+        chatBox.scrollTop = chatBox.scrollHeight;
+      })
+      .catch(() => {
+        appendBubble('訊息處理失敗，請稍後再試。', 'alert alert-danger py-2 px-3');
+      });
+  };
+
+  chatSend.addEventListener('click', sendMessage);
+  chatInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      sendMessage();
+    }
+  });
+</script>
+{% endblock %}

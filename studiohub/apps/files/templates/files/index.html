@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}檔案管理 | StudioHub{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-12 col-lg-5">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h1 class="h4 mb-3">檔案管理</h1>
+        <p class="text-muted">集中管理上傳與分享的檔案，支援分類與快速搜尋。</p>
+        <form class="mb-3" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <label class="form-label">上傳檔案（僅限 .txt）</label>
+          <div class="input-group">
+            {{ form.file }}
+            <button class="btn btn-primary" type="submit">上傳</button>
+          </div>
+          {% if form.file.errors %}
+            <div class="text-danger small mt-2">{{ form.file.errors|join:", " }}</div>
+          {% endif %}
+        </form>
+        <div class="mb-3">
+          <label class="form-label">搜尋關鍵字</label>
+          <input id="fileSearch" type="text" class="form-control" placeholder="輸入檔案名稱或標籤">
+        </div>
+        <button id="fileSearchBtn" class="btn btn-primary">立即搜尋</button>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-7">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h5">最近更新</h2>
+        <ul id="recentFiles" class="list-group list-group-flush">
+          {% for file in files %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <a href="{{ file.file.url }}">{{ file.file.name }}</a>
+              <span class="badge text-bg-secondary">{{ file.uploaded_at|date:"Y-m-d H:i" }}</span>
+            </li>
+          {% empty %}
+            <li class="list-group-item text-muted">尚未上傳檔案。</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const button = document.getElementById('fileSearchBtn');
+  const input = document.getElementById('fileSearch');
+  button.addEventListener('click', () => {
+    const keyword = input.value.trim() || '全部檔案';
+    button.textContent = `搜尋：${keyword}`;
+  });
+</script>
+{% endblock %}
